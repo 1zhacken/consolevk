@@ -40,6 +40,8 @@ namespace ConsoleApp5
                 else if (com == "sm") send();
                 else if (com == "enc") encr();
                 else if (com == "prx") proxy();
+                else if (com == "wc") wallc();
+                else if (com == "gt") gt();
                 else er();
                 com = Com();
             }
@@ -47,8 +49,8 @@ namespace ConsoleApp5
         static void help()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Привет! Прежде чем ты сможешь писать сообщения, тебе нужно авторизоваться. Для этого не нужен твой логин или пароль, только ключ доступа. Для того, чтобы получить его, открой в браузере эту ссылку https://goo.gl/uB27pB, после чего скопируй все, что находится между token= и &. Потом в консоли напиши tkn и введи туда свое значение. Да, на странице написано не передавайте. Но мне просто лень писать метод аутентификации. Извини. Ну и конечно же, я не буду трогать твой аккаунт. Для выхода напиши exit. Список команд ты найдешь в файле readme.txt. Нажми Enter, если понял");
-            Console.WriteLine("https://goo.gl/uB27pB");
+            Console.WriteLine("Привет! Прежде чем ты сможешь писать сообщения, тебе нужно авторизоваться. Для этого не нужен твой логин или пароль, только ключ доступа. Для того, чтобы получить его, открой в браузере эту ссылку https://goo.gl/R9tuYZ, после чего скопируй все, что находится между token= и &. Потом в консоли напиши tkn и введи туда свое значение. Да, на странице написано не передавайте. Но мне просто лень писать метод аутентификации. Извини. Ну и конечно же, я не буду трогать твой аккаунт. Для выхода напиши exit. Список команд ты найдешь в файле readme.txt. Нажми Enter, если понял");
+            Console.WriteLine("https://goo.gl/R9tuYZ");
             Console.ReadKey();
         }
         static void auth()
@@ -123,7 +125,7 @@ namespace ConsoleApp5
         {
             File.Delete("tkn.orb");
             Console.WriteLine("Готово! вызови tkn снова, чтобы авторизоваться! ");
-            Console.WriteLine("https://goo.gl/uB27pB");
+            Console.WriteLine("https://goo.gl/R9tuYZ");
         }
         static void send()
         {
@@ -218,6 +220,37 @@ namespace ConsoleApp5
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Внимание! Прокси может работать нестабильно! В случае проблем с соединением (долго грузятся сообщения) перезапусти программу и не включай прокси!");
             Console.ResetColor();
+        }
+        static void wallc()
+        {
+            WebClient cl = new WebClient();
+            cl.Encoding = Encoding.UTF8;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write("Текст >>> ");
+            Console.ResetColor();
+            string text = Console.ReadLine();
+            if (enc == true) text = base64e(text);
+            Console.WriteLine("Где публиковать?");
+            dynamic a = JObject.Parse(cl.DownloadString("https://api.vk.com/method/users.get?access_token=" + token + "&v=5.69"));
+            string id = a.response[0].id;
+            dynamic b = JObject.Parse(cl.DownloadString("https://api.vk.com/method/groups.get?access_token=" + token + "&filter=admin&v=5.69"));
+            for (int i = 0; i <= Int32.Parse(Convert.ToString(b.response.count))-1; i++) {
+                string group_id = b.response.items[i];
+                dynamic c = JObject.Parse(cl.DownloadString("https://api.vk.com/method/groups.getById?group_ids=" + group_id + "&v=5.69"));
+                string group_name = c.response[0].name;
+                Console.WriteLine(group_name + " - " + group_id);
+                }
+            Console.WriteLine("Страница - " + id);
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write("id >>> ");
+            Console.ResetColor();
+            string pid = Console.ReadLine();
+           if(pid == id) cl.DownloadString("https://api.vk.com/method/wall.post?owner_id="+pid+"&message="+text+"&access_token="+token+"&v=5.69");
+           else cl.DownloadString("https://api.vk.com/method/wall.post?owner_id=-" + pid + "&message=" + text + "&from_group=1&access_token=" + token + "&v=5.69");
+        }
+        static void gt()
+        {
+            Console.WriteLine(token);
         }
     }
 
