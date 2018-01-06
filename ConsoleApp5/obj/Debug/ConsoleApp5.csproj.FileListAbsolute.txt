@@ -1,0 +1,16 @@
+C:\Users\bilbo\source\repos\ConsoleApp5\ConsoleApp5\bin\Debug\ConsoleApp5.exe.config
+C:\Users\bilbo\source\repos\ConsoleApp5\ConsoleApp5\bin\Debug\ConsoleApp5.exe
+C:\Users\bilbo\source\repos\ConsoleApp5\ConsoleApp5\bin\Debug\ConsoleApp5.pdb
+C:\Users\bilbo\source\repos\ConsoleApp5\ConsoleApp5\bin\Debug\Newtonsoft.Json.dll
+C:\Users\bilbo\source\repos\ConsoleApp5\ConsoleApp5\bin\Debug\xNet.dll
+C:\Users\bilbo\source\repos\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.csprojResolveAssemblyReference.cache
+C:\Users\bilbo\source\repos\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.csproj.CoreCompileInputs.cache
+C:\Users\bilbo\source\repos\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.exe
+C:\Users\bilbo\source\repos\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.pdb
+C:\Users\Wigleg\source\repos\ConsoleApp5\ConsoleApp5\bin\Debug\ConsoleApp5.exe.config
+C:\Users\Wigleg\source\repos\ConsoleApp5\ConsoleApp5\bin\Debug\ConsoleApp5.exe
+C:\Users\Wigleg\source\repos\ConsoleApp5\ConsoleApp5\bin\Debug\ConsoleApp5.pdb
+C:\Users\Wigleg\source\repos\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.csprojResolveAssemblyReference.cache
+C:\Users\Wigleg\source\repos\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.csproj.CoreCompileInputs.cache
+C:\Users\Wigleg\source\repos\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.exe
+C:\Users\Wigleg\source\repos\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.pdb
