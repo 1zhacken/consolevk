@@ -25,7 +25,7 @@ namespace ConsoleApp5
         static void Main(string[] args)
         {
             StreamReader reader = new StreamReader(file);
-            token = base64d(reader.ReadToEnd());
+            token = base64dt(reader.ReadToEnd());
             reader.Close();
 
             if (token == "" || token == null || token == " " ) help();
@@ -209,6 +209,20 @@ namespace ConsoleApp5
                 return text;
             }
         }
+        static string base64dt(string text)
+        {
+            try
+            {
+                byte[] text1 = Convert.FromBase64String(text);
+                string s = Encoding.UTF8.GetString(text1);
+               // s += " [расшифровано]";
+                return s;
+            }
+            catch (FormatException e)
+            {
+                return text;
+            }
+        }
         static void encr()
         {
             Console.WriteLine("Использовать шифрование? Y/n");
@@ -327,10 +341,14 @@ namespace ConsoleApp5
                     if (i == 0) Console.Write("Загрузка сообщений...");
                     a = JObject.Parse(response);
                     string s = a.response.items[i].body;
-                    
-                  
-                    
-                    if (enc == true) msgs[i] = base64d(s);
+
+
+
+                    if (enc == true)
+                    {
+                        msgs[i] = base64d(s);
+                        
+                    }
                     if (a.response.items[i].read_state == "0") msgs[i] += " [не прочитано]";
                     if (a.response.items[i].body == "" || a.response.items[i].body == " " || a.response.items[i].body == null) msgs[i] = "%вложение%";
                     names[i] = a.response.items[i].from_id;
@@ -346,8 +364,8 @@ namespace ConsoleApp5
                 Console.Write("текст сообщения >>> ");
                 Console.ResetColor();
                 text = Console.ReadLine();
-                if (enc == true) text = base64e(text);
-                if (text == "exit") break;
+                if (enc == true) text = base64d(text);
+                if (text == "exit" || text == base64d("exit")) break;
                 else
                 {
 
