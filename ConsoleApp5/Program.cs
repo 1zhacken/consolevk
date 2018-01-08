@@ -20,13 +20,16 @@ namespace ConsoleApp5
         public static bool prx;
         public static string password = "fdathftyrhfgrteyrtfhgGTREhvkTRf56432HLn&6HFRT56GtYTR6TrETGHjy68YfGhTrGHfdathftyrhfgrteyrtfhgGTREhvkTRf56432HLn&6HFRT56GtYTR6TrETGHjy68YfGhTrGHfdathftyrhfgrteyrtfhgGTREhvkTRf56432HLn&6HFRT56GtYTR6TrETGHjy68YfGhTrGHtfg56dhfyrtghmnjUYTgfandftygjcmju&6gfnvjgluytrghF";
         public static FileStream file = new FileStream("tkn.orb", FileMode.Open);
+        public static string ss = "https://goo.gl/R9tuYZ";
+        public static string code = null;
         static void Main(string[] args)
         {
             StreamReader reader = new StreamReader(file);
-            
+            token = base64d(reader.ReadToEnd());
             reader.Close();
-            if (token == "") help();
 
+            if (token == "" || token == null || token == " " ) help();
+            
             string com = Com();
             while (com != "exit")
             {
@@ -42,6 +45,7 @@ namespace ConsoleApp5
                 else if (com == "prx") proxy();
                 else if (com == "wc") wallc();
                 else if (com == "gt") gt();
+                else if (com == "gc") gc();
                 else er();
                 com = Com();
             }
@@ -49,8 +53,8 @@ namespace ConsoleApp5
         static void help()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Привет! Прежде чем ты сможешь писать сообщения, тебе нужно авторизоваться. Для этого не нужен твой логин или пароль, только ключ доступа. Для того, чтобы получить его, открой в браузере эту ссылку https://goo.gl/R9tuYZ, после чего скопируй все, что находится между token= и &. Потом в консоли напиши tkn и введи туда свое значение. Да, на странице написано не передавайте. Но мне просто лень писать метод аутентификации. Извини. Ну и конечно же, я не буду трогать твой аккаунт. Для выхода напиши exit. Список команд ты найдешь в файле readme.txt. Нажми Enter, если понял");
-            Console.WriteLine("https://goo.gl/R9tuYZ");
+            Console.WriteLine("Привет! Прежде чем ты сможешь писать сообщения, тебе нужно авторизоваться. Для этого не нужен твой логин или пароль, только ключ доступа. Для того, чтобы получить его, открой в браузере эту ссылку "+ss+", после чего скопируй все, что находится после token= и до &. Потом в консоли напиши tkn и введи туда свое значение. Да, на странице написано не передавайте данные. Но мне просто лень писать метод аутентификации. Извини. Ну и конечно же, я не буду трогать твой аккаунт. Для выхода напиши exit. Список команд ты найдешь в файле readme.txt. Нажми Enter, если понял");
+            Console.WriteLine(ss);
             Console.ReadKey();
         }
         static void auth()
@@ -60,9 +64,9 @@ namespace ConsoleApp5
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(" ЭТО ПОЛНОСТЬЮ БЕЗОПАСНО, Я НЕ ХОЧУ ТЕБЯ ВЗЛОМАТЬ!");
             Console.ResetColor();
-            Console.Write("Твой токен >>> ");
+            Console.Write("Твой код >>> ");
             token = Console.ReadLine();
-           // token = base64e(token);
+            token = base64e(token);
             FileStream file1 = new FileStream("tkn.orb", FileMode.Append);
             StreamWriter writer = new StreamWriter(file1);
             writer.Write(token);
@@ -196,7 +200,9 @@ namespace ConsoleApp5
             try
             {
                 byte[] text1 = Convert.FromBase64String(text);
-                return Encoding.UTF8.GetString(text1);
+                string s =  Encoding.UTF8.GetString(text1);
+                s += " [расшифровано]";
+                return s;
             }
             catch (FormatException e)
             {
@@ -252,6 +258,110 @@ namespace ConsoleApp5
         {
             Console.WriteLine(token);
         }
+        static void gc()
+        {
+            WebClient cl = new WebClient();
+            cl.Encoding = Encoding.UTF8;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            dynamic c;
+            string[] ids = new string[5];
+            string res1 = null;
+            if (prx == true) res1 = cl.DownloadString("https://vk-api-proxy.xtrafrancyz.net/method/messages.get?count=5&access_token=" + token + "&v=5.69");
+            else res1 = cl.DownloadString("https://api.vk.com/method/messages.get?count=5&access_token=" + token + "&v=5.69");
+            //Console.WriteLine(response);
+            c = JObject.Parse(res1);
+            for (int i = 0; i < 4; i++) ids[i] = c.response.items[i].user_id;
+            string ids1 = ids[0] + "," + ids[1] + "," + ids[2] + "," + ids[3] + "," + ids[4];
+            string[] respo = new string[5];
+            for (int i = 0; i <= ids.Length; i++)
+            {
+                try
+                {
+                    if (prx == true) respo[i] = cl.DownloadString("https://vk-api-proxy.xtrafrancyz.net/method/users.get?user_ids=" + ids[i] + "&access_token=" + token + "&v=5.69");
+                    else respo[i] = cl.DownloadString("https://api.vk.com/method/users.get?user_ids=" + ids[i] + "&access_token=" + token + "&v=5.69");
+                }
+                catch (System.IndexOutOfRangeException e) { break; }
+            }
+            //response = cl.DownloadString("https://api.vk.com/method/users.get?user_ids=" + ids1 + "&access_token=" + token + "&v=5.69");            
+            Console.WriteLine("недавние собеседники: ");
+            for (int i = 0; i <= 4; i++)
+            {
+                dynamic d = JObject.Parse(respo[i]);
+                try
+                {
+                    string[] names1 = new string[5];
+                    names1[i] = d.response[0].first_name;
+                    string[] surnames = new string[5];
+                    surnames[i] = d.response[0].last_name;
+
+                    Console.WriteLine(names1[i] = " " + surnames[i] + " - " + ids[i]);
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    break;
+                }
+            }
+            Console.Write("id (если это беседа, то перед id беседы укажи с) >>> ");
+            Console.ResetColor();
+            string uid = Console.ReadLine();
+            
+            //Console.WriteLine(response);
+            string text = null;
+            string[] msgs = new string[25];
+            string[] names = new string[25];
+            string name = null;
+            dynamic a;
+            dynamic b;
+            string resp = null;
+            string[] msg = new string[25];
+           /* int m;
+            dynamic zz = JObject.Parse(response);
+            string s = null;
+            s = zz.response.response.items[24].id;
+            m = Int32.Parse(s);*/
+            
+            while (true){
+                string response = cl.DownloadString("https://api.vk.com/method/messages.getHistory?user_id=" + uid + "&v=5.69&rev=0&count=25&access_token=" + token);
+                for (int i = 0; i <= 24; i++)
+                {
+                    if (i == 0) Console.Write("Загрузка сообщений...");
+                    a = JObject.Parse(response);
+                    string s = a.response.items[i].body;
+                    
+                  
+                    
+                    if (enc == true) msgs[i] = base64d(s);
+                    if (a.response.items[i].read_state == "0") msgs[i] += " [не прочитано]";
+                    if (a.response.items[i].body == "" || a.response.items[i].body == " " || a.response.items[i].body == null) msgs[i] = "%вложение%";
+                    names[i] = a.response.items[i].from_id;
+                    resp = cl.DownloadString("https://api.vk.com/method/users.get?user_ids=" + names[i] + "&access_token=" + token + "&v=5.69");
+                    //Console.WriteLine(resp);
+                    b = JObject.Parse(resp);
+                    name = b.response[0].first_name + " " + b.response[0].last_name;
+                    msg[i] = (name + " " + ": " + msgs[i]);
+                    if (i == 24) Console.Clear();
+                }
+                for (int i = 0; i <= 24; i++) Console.WriteLine(msg[i]);
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.Write("текст сообщения >>> ");
+                Console.ResetColor();
+                text = Console.ReadLine();
+                if (enc == true) text = base64e(text);
+                if (text == "exit") break;
+                else
+                {
+
+                    
+                    a = JObject.Parse(response);
+                    string id = a.response.items[0].user_id;
+                    cl.DownloadString("https://api.vk.com/method/messages.send?user_id=" + id + "&message=" + text + "&access_token=" + token + "&v=5.69");
+                    Console.Clear();
+                }
+               
+            }
+
+        }
     }
+       
 
 }
