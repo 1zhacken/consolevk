@@ -7,6 +7,8 @@ gm - give messages
 
 sm - send message
 
+gc - open chat with user. can send and recieve messages
+
 wc - ceate a wall write
 
 prx - use proxy
