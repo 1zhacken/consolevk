@@ -11,6 +11,8 @@ gc - open chat with user. can send and recieve messages
 
 wc - ceate a wall write
 
+gn - get news
+
 prx - use proxy
 
 enc - use encrypt

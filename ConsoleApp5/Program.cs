@@ -19,8 +19,8 @@ namespace ConsoleApp5
         public static bool enc;
         public static bool prx;
         public static string password = "fdathftyrhfgrteyrtfhgGTREhvkTRf56432HLn&6HFRT56GtYTR6TrETGHjy68YfGhTrGHfdathftyrhfgrteyrtfhgGTREhvkTRf56432HLn&6HFRT56GtYTR6TrETGHjy68YfGhTrGHfdathftyrhfgrteyrtfhgGTREhvkTRf56432HLn&6HFRT56GtYTR6TrETGHjy68YfGhTrGHtfg56dhfyrtghmnjUYTgfandftygjcmju&6gfnvjgluytrghF";
-        public static FileStream file = new FileStream("tkn.orb", FileMode.Open);
-        public static string ss = "https://goo.gl/R9tuYZ";
+        public static FileStream file = new FileStream("tkn.orb", FileMode.OpenOrCreate);
+        public static string ss = "https://goo.gl/GBmBtG";
         public static string code = null;
         static void Main(string[] args)
         {
@@ -28,8 +28,8 @@ namespace ConsoleApp5
             token = base64dt(reader.ReadToEnd());
             reader.Close();
 
-            if (token == "" || token == null || token == " " ) help();
-            
+            if (token == "" || token == null || token == " ") help();
+
             string com = Com();
             while (com != "exit")
             {
@@ -46,6 +46,7 @@ namespace ConsoleApp5
                 else if (com == "wc") wallc();
                 else if (com == "gt") gt();
                 else if (com == "gc") gc();
+                else if (com == "gn") gn();
                 else er();
                 com = Com();
             }
@@ -53,7 +54,7 @@ namespace ConsoleApp5
         static void help()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Привет! Прежде чем ты сможешь писать сообщения, тебе нужно авторизоваться. Для этого не нужен твой логин или пароль, только ключ доступа. Для того, чтобы получить его, открой в браузере эту ссылку "+ss+", после чего скопируй все, что находится после token= и до &. Потом в консоли напиши tkn и введи туда свое значение. Да, на странице написано не передавайте данные. Но мне просто лень писать метод аутентификации. Извини. Ну и конечно же, я не буду трогать твой аккаунт. Для выхода напиши exit. Список команд ты найдешь в файле readme.txt. Нажми Enter, если понял");
+            Console.WriteLine("Привет! Прежде чем ты сможешь писать сообщения, тебе нужно авторизоваться. Для этого не нужен твой логин или пароль, только ключ доступа. Для того, чтобы получить его, открой в браузере эту ссылку " + ss + ", после чего скопируй все, что находится после token= и до &. Потом в консоли напиши tkn и введи туда свое значение. А если ты хочешь использовать прокси, ключ нужно получать тут - goo.gl/kpVozu. Да, на странице написано не передавайте данные. Но мне просто лень писать метод аутентификации. Извини. Ну и конечно же, я не буду трогать твой аккаунт. Для выхода напиши exit. Список команд ты найдешь в файле readme.txt. Нажми Enter, если понял");
             Console.WriteLine(ss);
             Console.ReadKey();
         }
@@ -129,12 +130,12 @@ namespace ConsoleApp5
         {
             File.Delete("tkn.orb");
             Console.WriteLine("Готово! вызови tkn снова, чтобы авторизоваться! ");
-            Console.WriteLine("https://goo.gl/R9tuYZ");
+            Console.WriteLine("goo.gl/GBmBtG");
         }
         static void send()
         {
             Console.Write("Текст >>> ");
-            
+
             string text = Console.ReadLine();
             //Console.WriteLine(token);
             if (enc == true) text = base64e(text);
@@ -200,7 +201,7 @@ namespace ConsoleApp5
             try
             {
                 byte[] text1 = Convert.FromBase64String(text);
-                string s =  Encoding.UTF8.GetString(text1);
+                string s = Encoding.UTF8.GetString(text1);
                 s += " [расшифровано]";
                 return s;
             }
@@ -215,7 +216,7 @@ namespace ConsoleApp5
             {
                 byte[] text1 = Convert.FromBase64String(text);
                 string s = Encoding.UTF8.GetString(text1);
-               // s += " [расшифровано]";
+                // s += " [расшифровано]";
                 return s;
             }
             catch (FormatException e)
@@ -254,23 +255,24 @@ namespace ConsoleApp5
             dynamic a = JObject.Parse(cl.DownloadString("https://api.vk.com/method/users.get?access_token=" + token + "&v=5.69"));
             string id = a.response[0].id;
             dynamic b = JObject.Parse(cl.DownloadString("https://api.vk.com/method/groups.get?access_token=" + token + "&filter=admin&v=5.69"));
-            for (int i = 0; i <= Int32.Parse(Convert.ToString(b.response.count))-1; i++) {
+            for (int i = 0; i <= Int32.Parse(Convert.ToString(b.response.count)) - 1; i++)
+            {
                 string group_id = b.response.items[i];
                 dynamic c = JObject.Parse(cl.DownloadString("https://api.vk.com/method/groups.getById?group_ids=" + group_id + "&v=5.69"));
                 string group_name = c.response[0].name;
                 Console.WriteLine(group_name + " - " + group_id);
-                }
+            }
             Console.WriteLine("Страница - " + id);
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.Write("id >>> ");
             Console.ResetColor();
             string pid = Console.ReadLine();
-           if(pid == id) cl.DownloadString("https://api.vk.com/method/wall.post?owner_id="+pid+"&message="+text+"&access_token="+token+"&v=5.69");
-           else cl.DownloadString("https://api.vk.com/method/wall.post?owner_id=-" + pid + "&message=" + text + "&from_group=1&access_token=" + token + "&v=5.69");
+            if (pid == id) cl.DownloadString("https://api.vk.com/method/wall.post?owner_id=" + pid + "&message=" + text + "&access_token=" + token + "&v=5.69");
+            else cl.DownloadString("https://api.vk.com/method/wall.post?owner_id=-" + pid + "&message=" + text + "&from_group=1&access_token=" + token + "&v=5.69");
         }
         static void gt()
         {
-            Console.WriteLine(token);
+            Console.WriteLine(base64dt(token));
         }
         static void gc()
         {
@@ -318,7 +320,7 @@ namespace ConsoleApp5
             Console.Write("id (если это беседа, то перед id беседы укажи с) >>> ");
             Console.ResetColor();
             string uid = Console.ReadLine();
-            
+
             //Console.WriteLine(response);
             string text = null;
             string[] msgs = new string[25];
@@ -328,13 +330,14 @@ namespace ConsoleApp5
             dynamic b;
             string resp = null;
             string[] msg = new string[25];
-           /* int m;
-            dynamic zz = JObject.Parse(response);
-            string s = null;
-            s = zz.response.response.items[24].id;
-            m = Int32.Parse(s);*/
-            
-            while (true){
+            /* int m;
+             dynamic zz = JObject.Parse(response);
+             string s = null;
+             s = zz.response.response.items[24].id;
+             m = Int32.Parse(s);*/
+
+            while (true)
+            {
                 string response = cl.DownloadString("https://api.vk.com/method/messages.getHistory?user_id=" + uid + "&v=5.69&rev=0&count=25&access_token=" + token);
                 for (int i = 0; i <= 24; i++)
                 {
@@ -347,7 +350,7 @@ namespace ConsoleApp5
                     if (enc == true)
                     {
                         msgs[i] = base64d(s);
-                        
+
                     }
                     if (a.response.items[i].read_state == "0") msgs[i] += " [не прочитано]";
                     if (a.response.items[i].body == "" || a.response.items[i].body == " " || a.response.items[i].body == null) msgs[i] = "%вложение%";
@@ -369,17 +372,69 @@ namespace ConsoleApp5
                 else
                 {
 
-                    
+
                     a = JObject.Parse(response);
                     string id = a.response.items[0].user_id;
                     cl.DownloadString("https://api.vk.com/method/messages.send?user_id=" + id + "&message=" + text + "&access_token=" + token + "&v=5.69");
                     Console.Clear();
                 }
-               
+
             }
 
         }
-    }
-       
+        static void gn()
+        {
+            WebClient cl = new WebClient();
+            cl.Encoding = Encoding.UTF8;
+            string response = cl.DownloadString("https://api.vk.com/method/newsfeed.get?filters=post&count=1&access_token=" + token+"&v=5.69");
+            dynamic a = JObject.Parse(response);
+            string gid = null;
+            string text = null;
 
+            while (true)
+            {
+                try
+                {
+                    // if(a.response.profiles != "")  gid = a.response.profiles[0].first_name + " " + a.response.profiles[0].last_name;
+                    gid = a.response.groups[0].name;
+                    if (enc == false) text = a.response.items[0].text;
+                    else text = base64d(a.response.items[0].text);
+                }
+                catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException e)
+                {
+                    Console.WriteLine("Что-то пошло не так. Проверь токен - gt");
+                }
+
+                text += " %вложение%";
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                Console.WriteLine(gid);
+                Console.ResetColor();
+                Console.WriteLine();
+                Console.WriteLine(text);
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("1 - выйти, 0 - следующий пост");
+                Console.ResetColor();
+                string t = Console.ReadLine();
+
+                string next = a.response.next_from;
+
+
+                if (t == "1") break;
+                else if (t == "0")
+                {
+                    Console.Clear();
+                    string s = "https://api.vk.com/method/newsfeed.get?filter=post&start_from=" + next + "&count=1&access_token=" + token + "&v=5.69";
+                    response = cl.DownloadString(s);
+                    a = JObject.Parse(response);
+
+
+                }
+
+
+            }
+        }
+
+
+    }
 }
